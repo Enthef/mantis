@@ -413,16 +413,8 @@ trait EthMiningServiceBuilder {
 trait EthTxServiceBuilder {
   self: StorageBuilder
     with BlockchainBuilder
-    // with BlockchainConfigBuilder
     with PendingTransactionsManagerBuilder
     with LedgerBuilder
-    // with KeyStoreBuilder
-    // with SyncControllerBuilder
-    // with OmmersPoolBuilder
-    // with ConsensusBuilder
-    // with ConsensusConfigBuilder
-    // with FilterManagerBuilder
-    // with FilterConfigBuilder
     with TxPoolConfigBuilder =>
 
   lazy val ethTxService = new EthTxService(
@@ -437,6 +429,16 @@ trait EthBlocksServiceBuilder {
   self: BlockchainBuilder with BlockchainConfigBuilder with LedgerBuilder =>
 
   lazy val ethBlocksService = new EthBlocksService(blockchain, ledger, blockchainConfig)
+}
+
+trait EthUserServiceBuilder {
+  self: StorageBuilder with BlockchainBuilder with BlockchainConfigBuilder with LedgerBuilder =>
+
+  lazy val ethUserService = new EthUserService(
+    blockchain,
+    ledger,
+    blockchainConfig
+  )
 }
 
 trait PersonalServiceBuilder {
@@ -522,6 +524,7 @@ trait JSONRpcControllerBuilder {
     with EthMiningServiceBuilder
     with EthBlocksServiceBuilder
     with EthTxServiceBuilder
+    with EthUserServiceBuilder
     with NetServiceBuilder
     with PersonalServiceBuilder
     with DebugServiceBuilder
@@ -542,6 +545,7 @@ trait JSONRpcControllerBuilder {
       ethMiningService,
       ethBlocksService,
       ethTxService,
+      ethUserService,
       personalService,
       testService,
       debugService,
@@ -720,6 +724,7 @@ trait Node
     with EthMiningServiceBuilder
     with EthBlocksServiceBuilder
     with EthTxServiceBuilder
+    with EthUserServiceBuilder
     with NetServiceBuilder
     with PersonalServiceBuilder
     with DebugServiceBuilder
