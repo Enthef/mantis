@@ -363,16 +363,9 @@ trait TestServiceBuilder {
 trait EthServiceBuilder {
   self: StorageBuilder
     with BlockchainBuilder
-    with BlockchainConfigBuilder
-    with PendingTransactionsManagerBuilder
     with LedgerBuilder
     with KeyStoreBuilder
     with SyncControllerBuilder
-    with ConsensusBuilder
-    with ConsensusConfigBuilder
-    with FilterManagerBuilder
-    with FilterConfigBuilder
-    with TxPoolConfigBuilder
     with AsyncConfigBuilder =>
 
   lazy val ethService = new EthService(
@@ -380,13 +373,8 @@ trait EthServiceBuilder {
     ledger,
     stxLedger,
     keyStore,
-    pendingTransactionsManager,
     syncController,
-    filterManager,
-    filterConfig,
-    blockchainConfig,
     Config.Network.protocolVersion,
-    txPoolConfig.getTransactionFromPoolTimeout,
     asyncConfig.askTimeout
   )
 }
