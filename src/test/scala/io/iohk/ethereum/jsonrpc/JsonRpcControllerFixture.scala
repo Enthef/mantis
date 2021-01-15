@@ -101,16 +101,23 @@ class JsonRpcControllerFixture(implicit system: ActorSystem)
     pendingTransactionsManager.ref,
     getTransactionFromPoolTimeout
   )
+  val ethTxService = new EthTxService(
+    blockchain,
+    ledger,
+    pendingTransactionsManager.ref,
+    getTransactionFromPoolTimeout
+  )
 
   val ethBlocksService = new EthBlocksService(blockchain, ledger, blockchainConfig)
 
-  protected def newJsonRpcController(ethService: EthService, ethBlocksService: EthBlocksService) =
+  protected def newJsonRpcController(ethBlocksService: EthBlocksService) =
     new JsonRpcController(
       web3Service,
       netService,
       ethService,
       ethMiningService,
       ethBlocksService,
+      ethTxService,
       personalService,
       None,
       debugService,
@@ -120,7 +127,41 @@ class JsonRpcControllerFixture(implicit system: ActorSystem)
       config
     )
 
-  val jsonRpcController = newJsonRpcController(ethService, ethBlocksService)
+  protected def newJsonRpcController(ethService: EthService) =
+    new JsonRpcController(
+      web3Service,
+      netService,
+      ethService,
+      ethMiningService,
+      ethBlocksService,
+      ethTxService,
+      personalService,
+      None,
+      debugService,
+      qaService,
+      checkpointingService,
+      mantisService,
+      config
+    )
+
+  protected def newJsonRpcController(ethTxService: EthTxService) =
+    new JsonRpcController(
+      web3Service,
+      netService,
+      ethService,
+      ethMiningService,
+      ethBlocksService,
+      ethTxService,
+      personalService,
+      None,
+      debugService,
+      qaService,
+      checkpointingService,
+      mantisService,
+      config
+    )
+
+  val jsonRpcController = newJsonRpcController(ethService)
 
   val blockHeader = Fixtures.Blocks.ValidBlock.header.copy(
     logsBloom = BloomFilter.EmptyBloomFilter,
